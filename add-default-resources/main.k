@@ -7,3 +7,4 @@ items = [item | {
             }
         } for container in item.spec.containers]
 } for item in option("items") or []]
+

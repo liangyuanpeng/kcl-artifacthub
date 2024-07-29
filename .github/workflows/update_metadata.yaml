@@ -2,9 +2,13 @@ name: Publish Package
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - "**.mod"
+    # branches:
+    #   - main
   pull_request:
+    paths:
+      - "**.mod"
 
 env:
   KPM_REG: "docker.io"
@@ -34,6 +38,7 @@ jobs:
         with:
           files: |
              **.mod
+             
 
       - name: Set up Go
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -41,23 +46,25 @@ jobs:
         with:
           go-version: 1.22
 
-      - name: Login
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: kcl registry login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
+      # - name: Login
+      #   if: steps.changed-files.outputs.any_changed == 'true'
+      #   run: kcl registry login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
 
       - name: Publish to docker.io
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            ./scripts/push_pkg_from.sh $file
+            echo $file
+            #./scripts/push_pkg_from.sh $file
           done
 
       - name: Publish to ghcr.io
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          kcl registry login -u ${{ secrets.DEPLOY_ACCESS_NAME }} -p ${{ secrets.DEPLOY_ACCESS_TOKEN }} ghcr.io
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            ./scripts/push_pkg_from.sh $file
+          #kcl registry login -u ${{ secrets.DEPLOY_ACCESS_NAME }} -p ${{ secrets.DEPLOY_ACCESS_TOKEN }} ghcr.io
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do 
+            echo $file
+            #./scripts/push_pkg_from.sh $file
           done
         env:
           KPM_REG: "ghcr.io"
