@@ -3,7 +3,7 @@ name: Test Publish Package
 on:
   pull_request:
     paths:
-      - "**.md"
+      - "**.md2"
 
 jobs:
   publish_pkg_local:
