@@ -27,6 +27,7 @@ test_json_patch = lambda {
     addressCity: str = get_obj(data, "address/city")
     teamName: str = get_obj(data, "labels/org.io~1team-name")
     newType = set_obj(data, "phoneNumbers/0/type", "school")
+    
     newState = set_obj(data, "address/state", "WA")
     newTeam = set_obj(data, "labels/org.io~1team-name", "security")
     assert phoneNumbers0type == "home"
@@ -35,4 +36,10 @@ test_json_patch = lambda {
     assert newType["phoneNumbers"][0]["type"] == "school"
     assert newState["address"]["state"] == "WA"
     assert newTeam["labels"]["org.io/team-name"] == "security"
+
+    newType2 = set_obj(data, "phoneNumbers/1/type", "work2")
+    assert newType2["phoneNumbers"][1]["type"] == "work2"
+
+    newobj = remove_obj(data, "phoneNumbers/1/type")
+    print(newobj)
 }

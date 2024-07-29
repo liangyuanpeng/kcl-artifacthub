@@ -57,6 +57,17 @@ _rfc6901Decode = lambda string: str {
   result = string.replace("~1","/").replace("~0","~")
 }
 
+_remove_patch_obj_n = lambda obj: {str:}, elements: [str], n: int -> {str:} {
+    assert n >= 0
+    result = Undefined
+     if n < len(elements):
+        current_path = "/".join(elements[:n+1])
+        current_obj = get_obj(obj, current_path)
+        assert current_obj not in NULL_CONSTANTS, "list value not found for path: ${current_path}"
+    print(result)
+    result
+}
+
 _build_patch_obj_n = lambda obj: {str:}, value: any, elements: [str], n: int -> {str:} {
     assert n >= 0
     result = Undefined
@@ -96,12 +107,16 @@ set_obj = lambda obj: any, path: str, value: any -> any {
     obj | _build_patch_obj_n(obj, value, path.lstrip('/').split('/'), 0)
 }
 
+remove_obj = lambda obj: any, path: str -> any {
+    obj | _remove_patch_obj_n(obj, path.lstrip('/').split('/'), 0)
+}
+
 _apply_patch = lambda obj: any, patch: Patch {
     dst = obj
     if patch.op == "add":
         assert False
     elif patch.op == "remove":
-        assert False
+        dst = remove_obj(obj, patch.path)
     elif patch.op == "replace":
         dst = build_patch(obj, patch.path, patch.value)
     elif patch.op == "move":

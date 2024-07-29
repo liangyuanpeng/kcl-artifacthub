@@ -1,0 +1,5 @@
+[dependencies]
+  [dependencies.jsonpatch]
+    name = "jsonpatch"
+    full_name = "jsonpatch_0.0.5"
+    version = "0.0.5"
